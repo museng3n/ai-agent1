@@ -1,0 +1,17 @@
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-X POST \
+-d '{
+  "contents": [{
+    "parts":[{"text": "Explain how AI works"}]
+    }]
+   }'
+
+
+
+
+firebase functions:config:set gemini.key="AIzaSyCfXdlUp1l3uX3_aVnzpJaSda1GUMaoI-w"
+
+
+webhook:
+https://services.leadconnectorhq.com/hooks/4lsGu1wo8FEGVlYKFkgU/webhook-trigger/43a7c444-5a64-40c4-961b-79048d0196b4

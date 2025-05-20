@@ -1,0 +1,94 @@
+OPENAI_API_KEY and ANTHROPIC_API_KEY:
+
+Looking at your server.js file, I can see that the system is currently set up to use only the Gemini API. There's no built-in logic to handle multiple AI providers yet.
+The server initializes only the Google Generative AI client:
+
+javascript// Initialize Gemini AI API
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+
+If you want to add support for multiple AI providers, you'd need to modify your server.js file to include logic for provider selection. Here's how you might implement it:
+javascript// Example modification to server.js to support multiple AI providers
+
+// Initialize AI providers based on available API keys
+let genAI, openaiClient, anthropicClient;
+
+if (process.env.GEMINI_API_KEY) {
+  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+}
+
+if (process.env.OPENAI_API_KEY) {
+  const { OpenAI } = require('openai');
+  openaiClient = new OpenAI(process.env.OPENAI_API_KEY);
+}
+
+if (process.env.ANTHROPIC_API_KEY) {
+  const Anthropic = require('@anthropic-ai/sdk');
+  anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
+
+// Modify the generate-content endpoint to select provider
+app.post('/api/generate-content', async (req, res) => {
+  try {
+    const requestData = req.body;
+    const provider = requestData.provider || 'gemini'; // Default to Gemini
+    
+    // Construct prompt
+    const prompt = constructPrompt(requestData);
+    let generatedContent;
+    
+    // Select provider based on availability and request
+    if (provider === 'gemini' && genAI) {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(prompt);
+      generatedContent = result.response.text();
+    } 
+    else if (provider === 'openai' && openaiClient) {
+      const completion = await openaiClient.chat.completions.create({
+        model: "gpt-4",
+        messages: [{ role: "user", content: prompt }]
+      });
+      generatedContent = completion.choices[0].message.content;
+    }
+    else if (provider === 'anthropic' && anthropicClient) {
+      const message = await anthropicClient.messages.create({
+        model: "claude-2",
+        max_tokens: 1000,
+        prompt: `<human>${prompt}</human><assistant>`
+      });
+      generatedContent = message.content;
+    }
+    else {
+      throw new Error('Selected AI provider not available');
+    }
+    
+    // Return the generated content
+    return res.json({
+      success: true,
+      content: generatedContent,
+      provider: provider,
+      frameworkElement: requestData.frameworkElement,
+      contentType: requestData.contentType,
+      platform: requestData.platform
+    });
+    
+  } catch (error) {
+    console.error('Error generating content:', error);
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Error generating content' 
+    });
+  }
+});
+You would also need to:
+
+Install the required npm packages:
+
+npm install openai @anthropic-ai/sdk
+
+
+Update your frontend to allow selection of the AI provider
+Modify the ghl-integration.js file to pass the provider selection to the backend
+
+Without these changes, even if you add all three API keys to your .env file, only the Gemini API will be used since that's what the current code is set up to use.
+Would you like me to help you implement any of these changes to support multiple AI providers?

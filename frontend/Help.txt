@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATE AI Help Center</title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #ff006e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --warning: #ffbe0b;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        main {
+            margin: 30px 0;
+        }
+        
+        .help-header {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .help-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .help-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 45px;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 18px;
+        }
+        
+        .help-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+        
+        .help-sidebar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        
+        .help-sidebar-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .help-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .help-category {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .help-category:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .help-category.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .category-icon {
+            font-size: 1.2rem;
+        }
+        
+        .help-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .help-content-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .help-content-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .help-content-description {
+            color: var(--gray);
+        }
+        
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .faq-item {
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--light);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .faq-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.open .faq-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 20px;
+            display: none;
+            border-top: 1px solid var(--gray-light);
+        }
+        
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+        
+        .help-content-section {
+            margin-bottom: 40px;
+        }
+        
+        .help-content-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        .help-content-section p {
+            margin-bottom: 15px;
+        }
+        
+        .help-content-section ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .help-content-section ul li {
+            margin-bottom: 8px;
+        }
+        
+        .video-tutorial {
+            margin-top: 40px;
+            background-color: var(--light);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .video-preview {
+            background-color: #dbdeef;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(58, 134, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            background-color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .play-icon {
+            color: white;
+            font-size: 40px;
+            margin-left: 5px;
+        }
+        
+        .video-details {
+            padding: 20px;
+        }
+        
+        .video-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .video-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .quick-link {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--dark);
+        }
+        
+        .quick-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quick-link-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .quick-link-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .quick-link-description {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-preview {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <h1>CREATE AI</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">AI Setup</a></li>
+                    <li><a href="#">Content Generator</a></li>
+                    <li><a href="#" class="active">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="help-header">
+                <h1 class="help-title">How can we help you?</h1>
+                <p class="help-subtitle">Search our knowledge base or browse the topics below to find what you need</p>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search for help on any topic...">
+                </div>
+            </div>
+            
+            <div class="help-grid">
+                <aside class="help-sidebar">
+                    <h2 class="help-sidebar-title">Help Categories</h2>
+                    <div class="help-categories">
+                        <a href="#" class="help-category active">
+                            <span class="category-icon">🚀</span>
+                            <span>Getting Started</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">⚙️</span>
+                            <span>Setting Up Your AI</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">📝</span>
+                            <span>Creating Content</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">📊</span>
+                            <span>Understanding CREATE</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">💼</span>
+                            <span>Account & Billing</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">🔄</span>
+                            <span>Advanced Features</span>
+                        </a>
+                        <a href="#" class="help-category">
+                            <span class="category-icon">❓</span>
+                            <span>Troubleshooting</span>
+                        </a>
+                    </div>
+                </aside>
+                
+                <section class="help-content">
+                    <div class="help-content-header">
+                        <h1 class="help-content-title">Getting Started with CREATE AI</h1>
+                        <p class="help-content-description">Everything you need to know to start generating content with your personalized AI agent.</p>
+                    </div>
+                    
+                    <div class="help-content-section">
+                        <h2>What is CREATE AI?</h2>
+                        <p>CREATE AI is your personal content creation assistant that's trained specifically on your business strategies using the CREATE framework. Unlike generic AI tools, your CREATE AI agent understands your unique approach to:</p>
+                        <ul>
+                            <li><strong>C</strong>onnect with your audience</li>
+                            <li><strong>R</strong>evolutionize your content</li>
+                            <li><strong>E</strong>ngage your community</li>
+                            <li><strong>A</strong>nalyze your results</li>
+                            <li><strong>T</strong>arget specific audience segments</li>
+                            <li><strong>E</strong>xpand your reach</li>
+                        </ul>
+                        <p>By training your AI on your specific strategies for each element, you get content that truly represents your unique business voice and approach.</p>
+                    </div>
+                    
+                    <div class="help-content-section">
+                        <h2>Quick Start Guide</h2>
+                        <p>Follow these steps to start creating content with your personalized AI:</p>
+                        <ol style="padding-left: 20px;">
+                            <li><strong>Complete AI Setup:</strong> Train your AI by sharing your specific strategies for each CREATE element</li>
+                            <li><strong>Choose a Framework Element:</strong> Select which aspect of the CREATE framework you want to focus on</li>
+                            <li><strong>Select Content Type:</strong> Choose what kind of content you want to create (post, email, blog, etc.)</li>
+                            <li><strong>Provide Context:</strong> Add specific details about the topic or focus</li>
+                            <li><strong>Generate Content:</strong> Let your AI create content based on your unique framework</li>
+                            <li><strong>Edit and Save:</strong> Make any final adjustments before using the content</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="video-tutorial">
+                        <div class="video-preview">
+                            <div class="play-button">
+                                <span class="play-icon">▶</span>
+                            </div>
+                        </div>
+                        <div class="video-details">
+                            <h3 class="video-title">Complete Setup Tutorial: Train Your Personal CREATE AI Agent</h3>
+                            <p class="video-description">This 8-minute video walks you through the complete process of setting up and training your AI to understand your unique business strategies.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-list" style="margin-top: 40px;">
+                        <h2 style="margin-bottom: 20px;">Frequently Asked Questions</h2>
+                        
+                        <div class="faq-item open">
+                            <div class="faq-question">
+                                <span>How is CREATE AI different from regular AI tools?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>CREATE AI is personalized to your specific business strategies. Unlike general AI tools that produce generic content, your CREATE AI agent learns exactly how YOU implement each element of the CREATE framework in your business.</p>
+                                <p>This means the content it generates will reflect your unique voice, approach, and strategies - making it feel like you wrote it yourself, not like it came from an AI.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How detailed should I be when setting up my AI?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>The more specific and detailed you are when sharing your strategies, the better your AI will understand your unique approach. Instead of general statements like "I post helpful content," share specific strategies like "I create weekly tutorial videos demonstrating specific techniques" or "I share client transformation stories every Friday."</p>
+                                <p>We recommend providing at least 5 specific strategies for each CREATE element.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Can I update my framework strategies later?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Absolutely! Your business evolves, and your AI should too. You can update your CREATE framework strategies at any time by going to the "AI Setup" section. Each time you update your strategies, your AI will adapt to reflect those changes in future content generation.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How many content pieces can I generate?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Your current plan includes 100 content generations per month. This resets on the first day of each month. You can track your usage on the Dashboard. If you need more generations, you can upgrade your plan at any time.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Do I need to complete all framework elements to use the AI?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer">
+                                <p>You can start generating content after setting up at least one CREATE element. However, your AI becomes more powerful and versatile as you complete more elements. For the best results, we recommend completing all six elements of the CREATE framework.</p>
+                                <p>If you've only completed certain elements, your AI will still generate content but may be limited to those specific elements.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-links">
+                        <a href="#" class="quick-link">
+                            <div class="quick-link-icon">📝</div>
+                            <h3 class="quick-link-title">Content Types</h3>
+                            <p class="quick-link-description">Learn about all available content formats</p>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <div class="quick-link-icon">📊</div>
+                            <h3 class="quick-link-title">CREATE Framework</h3>
+                            <p class="quick-link-description">Understand each element in depth</p>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <div class="quick-link-icon">🔧</div>
+                            <h3 class="quick-link-title">Advanced Tips</h3>
+                            <p class="quick-link-description">Get the most from your AI agent</p>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <div class="quick-link-icon">📱</div>
+                            <h3 class="quick-link-title">Mobile Usage</h3>
+                            <p class="quick-link-description">Create on the go with our mobile version</p>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Simple interactive functionality for the FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', function() {
+                    item.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

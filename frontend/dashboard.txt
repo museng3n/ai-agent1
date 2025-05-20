@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATE AI Dashboard</title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #ff006e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --warning: #ffbe0b;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        main {
+            margin: 30px 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-message h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .welcome-message p {
+            color: var(--gray);
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .dashboard-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .status-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .status-label {
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .status-value.warning {
+            color: var(--warning);
+        }
+        
+        .status-value.success {
+            color: var(--success);
+        }
+        
+        .recent-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .content-item {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .content-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .content-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray);
+        }
+        
+        .content-details {
+            flex: 1;
+        }
+        
+        .content-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .content-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .content-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .content-action {
+            background: none;
+            border: 1px solid var(--gray-light);
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--gray);
+        }
+        
+        .content-action:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .framework-status {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .framework-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .framework-letter {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .framework-letter.incomplete {
+            background-color: var(--gray-light);
+            color: var(--gray);
+        }
+        
+        .framework-detail {
+            flex: 1;
+        }
+        
+        .framework-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .framework-progress {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .usage-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--light);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-weight: 600;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-nav-btn {
+            background: none;
+            border: 1px solid var(--gray-light);
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--gray);
+        }
+        
+        .calendar-nav-btn:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .calendar-day {
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--gray);
+            padding: 5px 0;
+        }
+        
+        .calendar-date {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-date:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .calendar-date.today {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .calendar-date.has-content {
+            position: relative;
+        }
+        
+        .calendar-date.has-content::after {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .setup-prompt {
+            background-color: rgba(58, 134, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .setup-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .setup-message {
+            flex: 1;
+        }
+        
+        .setup-message h3 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .setup-message p {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .setup-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .setup-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .usage-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <h1>CREATE AI</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">AI Setup</a></li>
+                    <li><a href="#">Content Generator</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="welcome-message">
+                    <h1>Welcome back, Sarah!</h1>
+                    <p>Your AI is ready to create content based on your CREATE framework.</p>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn">
+                        <span>Create Content</span>
+                        <span>+</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="setup-prompt">
+                <div class="setup-icon">⚙️</div>
+                <div class="setup-message">
+                    <h3>Complete Your Framework Setup</h3>
+                    <p>You've completed 3 of 6 CREATE framework elements. Complete the rest to unlock your AI's full potential!</p>
+                    <button class="setup-btn">Continue Setup</button>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid" style="margin-top: 30px;">
+                <div class="dashboard-column">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recently Generated Content</h2>
+                            <div class="card-actions">
+                                <a href="#" style="color: var(--primary); font-size: 0.9rem; font-weight: 500;">View All</a>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="recent-content">
+                                <div class="content-item">
+                                    <div class="content-icon">📷</div>
+                                    <div class="content-details">
+                                        <div class="content-title">Instagram Post: Client Transformation Story</div>
+                                        <div class="content-meta">
+                                            <span>Instagram</span>
+                                            <span>Connect Element</span>
+                                            <span>Created 2 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="content-actions">
+                                        <button class="content-action">📝</button>
+                                        <button class="content-action">📋</button>
+                                    </div>
+                                </div>
+                                <div class="content-item">
+                                    <div class="content-icon">🎵</div>
+                                    <div class="content-details">
+                                        <div class="content-title">TikTok Script: Innovative Workout Technique</div>
+                                        <div class="content-meta">
+                                            <span>TikTok</span>
+                                            <span>Revolutionize Element</span>
+                                            <span>Created yesterday</span>
+                                        </div>
+                                    </div>
+                                    <div class="content-actions">
+                                        <button class="content-action">📝</button>
+                                        <button class="content-action">📋</button>
+                                    </div>
+                                </div>
+                                <div class="content-item">
+                                    <div class="content-icon">📧</div>
+                                    <div class="content-details">
+                                        <div class="content-title">Email Newsletter: Monthly Fitness Challenge</div>
+                                        <div class="content-meta">
+                                            <span>Email</span>
+                                            <span>Engage Element</span>
+                                            <span>Created 3 days ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="content-actions">
+                                        <button class="content-action">📝</button>
+                                        <button class="content-action">📋</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Content Calendar</h2>
+                            <div class="card-actions">
+                                <a href="#" style="color: var(--primary); font-size: 0.9rem; font-weight: 500;">Schedule Content</a>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="calendar-header">
+                                <div class="calendar-title">April 2025</div>
+                                <div class="calendar-nav">
+                                    <button class="calendar-nav-btn">←</button>
+                                    <button class="calendar-nav-btn">→</button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="calendar-day">Sun</div>
+                                <div class="calendar-day">Mon</div>
+                                <div class="calendar-day">Tue</div>
+                                <div class="calendar-day">Wed</div>
+                                <div class="calendar-day">Thu</div>
+                                <div class="calendar-day">Fri</div>
+                                <div class="calendar-day">Sat</div>
+                                
+                                <div class="calendar-date">1</div>
+                                <div class="calendar-date">2</div>
+                                <div class="calendar-date">3</div>
+                                <div class="calendar-date">4</div>
+                                <div class="calendar-date">5</div>
+                                <div class="calendar-date has-content">6</div>
+                                <div class="calendar-date">7</div>
+                                <div class="calendar-date has-content">8</div>
+                                <div class="calendar-date">9</div>
+                                <div class="calendar-date today">10</div>
+                                <div class="calendar-date has-content">11</div>
+                                <div class="calendar-date">12</div>
+                                <div class="calendar-date">13</div>
+                                <div class="calendar-date">14</div>
+                                <div class="calendar-date has-content">15</div>
+                                <div class="calendar-date">16</div>
+                                <div class="calendar-date">17</div>
+                                <div class="calendar-date">18</div>
+                                <div class="calendar-date has-content">19</div>
+                                <div class="calendar-date">20</div>
+                                <div class="calendar-date">21</div>
+                                <div class="calendar-date">22</div>
+                                <div class="calendar-date">23</div>
+                                <div class="calendar-date">24</div>
+                                <div class="calendar-date">25</div>
+                                <div class="calendar-date">26</div>
+                                <div class="calendar-date">27</div>
+                                <div class="calendar-date">28</div>
+                                <div class="calendar-date">29</div>
+                                <div class="calendar-date">30</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-column">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2 class="card-title">AI Status</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="status-box">
+                                <div class="status-item">
+                                    <div class="status-label">AI Framework Training</div>
+                                    <div class="status-value warning">Partial (3/6)</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-label">Content Generations</div>
+                                    <div class="status-value">23 this month</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-label">Generation Limit</div>
+                                    <div class="status-value success">77 remaining</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-label">Account Status</div>
+                                    <div class="status-value success">Active</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Framework Status</h2>
+                            <div class="card-actions">
+                                <a href="#" style="color: var(--primary); font-size: 0.9rem; font-weight: 500;">Edit</a>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="framework-status">
+                                <div class="framework-item">
+                                    <div class="framework-letter">C</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Connect</div>
+                                        <div class="framework-progress">Complete (5 strategies)</div>
+                                    </div>
+                                </div>
+                                <div class="framework-item">
+                                    <div class="framework-letter">R</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Revolutionize</div>
+                                        <div class="framework-progress">Complete (4 strategies)</div>
+                                    </div>
+                                </div>
+                                <div class="framework-item">
+                                    <div class="framework-letter">E</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Engage</div>
+                                        <div class="framework-progress">Complete (6 strategies)</div>
+                                    </div>
+                                </div>
+                                <div class="framework-item">
+                                    <div class="framework-letter incomplete">A</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Analyze</div>
+                                        <div class="framework-progress">Not started</div>
+                                    </div>
+                                </div>
+                                <div class="framework-item">
+                                    <div class="framework-letter incomplete">T</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Target</div>
+                                        <div class="framework-progress">Not started</div>
+                                    </div>
+                                </div>
+                                <div class="framework-item">
+                                    <div class="framework-letter incomplete">E</div>
+                                    <div class="framework-detail">
+                                        <div class="framework-name">Expand</div>
+                                        <div class="framework-progress">Not started</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Usage Stats</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="usage-stats">
+                                <div class="stat-box">
+                                    <div class="stat-value">23</div>
+                                    <div class="stat-label">Content Pieces</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-value">4</div>
+                                    <div class="stat-label">Platforms</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-value">C</div>
+                                    <div class="stat-label">Most Used Element</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-value">📷</div>
+                                    <div class="stat-label">Top Platform</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
