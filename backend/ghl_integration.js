@@ -2,6 +2,8 @@
 
 // Configuration
 const API_ENDPOINT = 'https://your-create-ai-backend.com/api';
+const PRIMARY_API_ENDPOINT = "https://create-ai-framework.vercel.app";
+const ALTERNATIVE_API_ENDPOINT = "https://create-al-framework-4gh4hnqfb-museng3ns-projectsvercel.app";
 
 // Utility functions
 function getUserId() {
