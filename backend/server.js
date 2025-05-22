@@ -1,17 +1,13 @@
 // server.js - Main server file for CREATE AI Framework Backend
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser'); // Add this if missing
 require('dotenv').config();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const ghlWebhookHandler = require('./ghl_webhook_handler');
 
-
-// Load environment variables
-dotenv.config();
-
 // Initialize the server
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -182,10 +178,10 @@ app.get('/api/get-framework/:userId', async (req, res) => {
 app.get('/api/data', (req, res) => {
     res.json({ data: [1, 2, 3, 4, 5] });
 });
+
 app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello from the backend!' });
 });
-// Start the server
-app.listen(port, () => {
-    console.log(`CREATE AI Backend running on port ${port}`);
-});
+
+// Export the Express API
+module.exports = app;
